@@ -29,10 +29,31 @@ const Register = () => {
         alert("Firebase authentication is not available. Please refresh the page.");
         return;
       }
-      await signInWithPopup(auth, provider);
-      navigate("/login");
+      
+      // Configure the provider for better popup behavior
+      provider.setCustomParameters({
+        prompt: 'select_account'
+      });
+      
+      const result = await signInWithPopup(auth, provider);
+      if (result.user) {
+        // After successful Google sign-up, redirect to dashboard instead of login
+        navigate("/dashboard");
+      }
     } catch (error) {
-      alert(error.message);
+      // Handle specific Firebase Auth errors
+      if (error.code === 'auth/cancelled-popup-request' || error.code === 'auth/popup-cancelled-by-user') {
+        // User cancelled the popup - don't show an error
+        console.log('Google sign-in was cancelled by user');
+        return;
+      } else if (error.code === 'auth/popup-blocked') {
+        alert("Popup was blocked by your browser. Please allow popups for this site and try again.");
+      } else if (error.code === 'auth/unauthorized-domain') {
+        alert("This domain is not authorized for Google sign-in. Please contact support.");
+      } else {
+        console.error('Google sign-in error:', error);
+        alert(`Sign-in failed: ${error.message}`);
+      }
     }
   };
 

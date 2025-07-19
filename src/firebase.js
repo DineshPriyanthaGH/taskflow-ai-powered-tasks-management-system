@@ -24,6 +24,16 @@ console.log("Firebase app initialized successfully");
 // Initialize Firebase Auth (this should always work)
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
+
+// Configure Google Auth provider for better reliability
+provider.setCustomParameters({
+  prompt: 'select_account'
+});
+
+// Add additional scopes if needed
+provider.addScope('email');
+provider.addScope('profile');
+
 console.log("Firebase Auth initialized");
 
 // Initialize Realtime Database (optional - may fail if not enabled)

@@ -15,18 +15,55 @@ const firebaseConfig = {
   measurementId: "G-QNHBDG9FJ9"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+let auth = null;
+let provider = null;
+let database = null;
+let db = null;
+let storage = null;
 
-// Initialize Firebase services
-export const auth = getAuth(app);
-export const provider = new GoogleAuthProvider();
+try {
+  console.log("Initializing Firebase...");
+  
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  
+  console.log("Firebase app initialized successfully");
 
-// Initialize Realtime Database and export it
-export const database = getDatabase(app);
+  // Initialize Firebase services
+  auth = getAuth(app);
+  provider = new GoogleAuthProvider();
 
-// Initialize Firestore and export it (for future use)
-export const db = getFirestore(app);
+  // Initialize Realtime Database with error handling
+  try {
+    database = getDatabase(app);
+    console.log("Realtime Database initialized");
+  } catch (dbError) {
+    console.warn("Realtime Database initialization failed:", dbError);
+    database = null;
+  }
 
-// Initialize Storage
-export const storage = getStorage(app);
+  // Initialize Firestore with error handling
+  try {
+    db = getFirestore(app);
+    console.log("Firestore initialized");
+  } catch (fsError) {
+    console.warn("Firestore initialization failed:", fsError);
+    db = null;
+  }
+
+  // Initialize Storage
+  storage = getStorage(app);
+  console.log("Firebase Storage initialized");
+  
+} catch (error) {
+  console.error("Failed to initialize Firebase:", error);
+  
+  // Keep null values as fallbacks
+  auth = null;
+  provider = null;
+  database = null;
+  db = null;
+  storage = null;
+}
+
+export { auth, provider, database, db, storage };

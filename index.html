@@ -6,8 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Taskflow AI</title>
   </head>
-  <body class="bg-black text-white">
-    <div id="root"></div>
+  <body>
+    <div id="root">
+      <div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #1a1a1a; color: white; font-family: Arial, sans-serif;">
+        <div style="text-align: center;">
+          <div style="font-size: 24px; margin-bottom: 16px;">Loading Taskflow AI...</div>
+          <div style="font-size: 14px; color: #888;">If this message persists, there may be a JavaScript error.</div>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+      // Add error handling
+      window.addEventListener('error', function(e) {
+        console.error('Global error:', e.error);
+        const root = document.getElementById('root');
+        root.innerHTML = '<div style="padding: 20px; background: #ff4444; color: white;">Error loading application: ' + e.error.message + '</div>';
+      });
+    </script>
   </body>
 </html>

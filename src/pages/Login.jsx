@@ -10,6 +10,10 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
+      if (!auth) {
+        alert("Firebase authentication is not available. Please refresh the page.");
+        return;
+      }
       await signInWithEmailAndPassword(auth, email, password);
       navigate("/dashboard");
     } catch (error) {
@@ -19,6 +23,10 @@ const Login = () => {
 
   const handleGoogle = async () => {
     try {
+      if (!auth || !provider) {
+        alert("Firebase authentication is not available. Please refresh the page.");
+        return;
+      }
       await signInWithPopup(auth, provider);
       navigate("/dashboard");
     } catch (error) {

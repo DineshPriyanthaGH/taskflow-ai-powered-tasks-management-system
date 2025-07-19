@@ -12,6 +12,10 @@ const Register = () => {
   const handleRegister = async () => {
     if (password !== confirmPassword) return alert("Passwords do not match");
     try {
+      if (!auth) {
+        alert("Firebase authentication is not available. Please refresh the page.");
+        return;
+      }
       await createUserWithEmailAndPassword(auth, email, password);
       navigate("/login");
     } catch (error) {
@@ -21,6 +25,10 @@ const Register = () => {
 
   const handleGoogle = async () => {
     try {
+      if (!auth || !provider) {
+        alert("Firebase authentication is not available. Please refresh the page.");
+        return;
+      }
       await signInWithPopup(auth, provider);
       navigate("/login");
     } catch (error) {

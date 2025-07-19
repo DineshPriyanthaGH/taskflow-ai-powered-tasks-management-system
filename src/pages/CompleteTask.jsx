@@ -24,6 +24,10 @@ const CompleteTask = () => {
 
     const fetchTask = async () => {
       try {
+        if (!database) {
+          setError('Database is not available. Please refresh the page.');
+          return;
+        }
         const taskSnapshot = await get(dbRef(database, `tasks/${user.uid}/${taskId}`));
         if (taskSnapshot.exists()) {
           setTask(taskSnapshot.val());
@@ -94,6 +98,10 @@ const CompleteTask = () => {
     }
 
     // Now update database (file uploaded or not)
+    if (!database) {
+      throw new Error('Database is not available. Cannot save task completion.');
+    }
+    
     await update(dbRef(database, `tasks/${user.uid}/${taskId}`), {
       completed: true,
       completionNotes: notes.trim(),
@@ -119,6 +127,11 @@ const CompleteTask = () => {
 };
 const uploadFileAndGetURL = (file, userId, taskId) => {
   return new Promise((resolve, reject) => {
+    if (!storage) {
+      reject(new Error('Firebase Storage is not available. File upload is disabled.'));
+      return;
+    }
+    
     const fileRef = storageRef(storage, `task-proofs/${userId}/${taskId}/${file.name}`);
     const uploadTask = uploadBytesResumable(fileRef, file);
 

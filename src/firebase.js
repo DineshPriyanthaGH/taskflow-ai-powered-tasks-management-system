@@ -21,11 +21,12 @@ console.log("Initializing Firebase...");
 const app = initializeApp(firebaseConfig);
 console.log("Firebase app initialized successfully");
 
-// Initialize Firebase services
+// Initialize Firebase Auth (this should always work)
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
+console.log("Firebase Auth initialized");
 
-// Initialize Realtime Database (may fail if not enabled)
+// Initialize Realtime Database (optional - may fail if not enabled)
 let database = null;
 try {
   database = getDatabase(app);
@@ -35,7 +36,7 @@ try {
   console.warn("Please enable Realtime Database in Firebase Console");
 }
 
-// Initialize Firestore (may fail if not enabled)  
+// Initialize Firestore (optional - may fail if not enabled)  
 let db = null;
 try {
   db = getFirestore(app);
@@ -44,8 +45,14 @@ try {
   console.warn("Firestore initialization failed:", fsError);
 }
 
-// Initialize Storage
-const storage = getStorage(app);
-console.log("Firebase Storage initialized");
+// Initialize Storage (optional - may fail if not properly configured)
+let storage = null;
+try {
+  storage = getStorage(app);
+  console.log("Firebase Storage initialized");
+} catch (storageError) {
+  console.warn("Firebase Storage initialization failed:", storageError);
+  console.warn("Please check Storage configuration in Firebase Console");
+}
 
 export { auth, provider, database, db, storage };
